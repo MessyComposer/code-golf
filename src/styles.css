@@ -1,0 +1,725 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    color: #4a5568;
+    font-weight: 400;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Demo Section */
+.demo-section {
+    background: #f7fafc;
+    padding: 80px 0;
+}
+
+.demo-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    color: #1a202c;
+}
+
+/* Code Golf Visualizer Specific Styles */
+.golf-challenge {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.challenge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.challenge-title-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.challenge-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.challenge-selector select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.875rem;
+    color: #2d3748;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.challenge-selector select:hover {
+    border-color: #667eea;
+}
+
+.challenge-selector select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.challenge-header h3 {
+    margin: 0;
+    color: #1a202c;
+    font-size: 1.5rem;
+}
+
+.challenge-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+.difficulty-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.difficulty-badge.easy {
+    background: #c6f6d5;
+    color: #2f855a;
+}
+
+.difficulty-badge.medium {
+    background: #fed7aa;
+    color: #c2410c;
+}
+
+.difficulty-badge.hard {
+    background: #fecaca;
+    color: #dc2626;
+}
+
+.challenge-description {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f7fafc;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.expected-output {
+    margin-top: 1rem;
+}
+
+.expected-output h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2d3748;
+}
+
+#expected-output {
+    overflow: auto;
+    max-height: 200px;
+}
+
+.code-editor-section {
+    margin-bottom: 2rem;
+}
+
+.editor-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Ensure all editor control buttons are visible */
+.editor-controls > * {
+    flex-shrink: 0;
+}
+
+.editor-controls select,
+.editor-controls .btn {
+    min-width: max-content;
+    min-height: 44px; /* Better touch target */
+}
+
+.editor-controls-right {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.editor-controls-right .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    min-height: 44px; /* Better touch target */
+}
+
+.editor-controls-left {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#language-select {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: white;
+    min-width: 120px;
+    min-height: 44px; /* Better touch target */
+}
+
+/* Monaco Editor styling */
+.editor-container {
+    margin-bottom: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: visible;
+    transition: border-color 0.3s ease;
+}
+
+.editor-container:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#monaco-editor {
+    height: 300px;
+    width: 100%;
+}
+
+.output-section {
+    background: #f7fafc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #e2e8f0;
+    border-bottom: 1px solid #cbd5e0;
+}
+
+.output-header h4 {
+    margin: 0;
+    color: #2d3748;
+}
+
+.metrics {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #4a5568;
+}
+
+#code-output {
+    padding: 1rem;
+    margin: 0;
+    color: #e2e8f0;
+    font-family: 'Fira Code', 'Monaco', 'Menlo', monospace;
+    font-size: 0.875rem;
+    min-height: 60px;
+    border-radius: 0;
+    border-left: 4px solid #e5e7eb;
+    transition: border-left-color 0.3s ease;
+}
+
+/* Performance error message styling */
+.performance-error {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    padding: 0.75rem !important;
+    margin-top: 1rem !important;
+    border-radius: 6px !important;
+    border: 1px solid #fecaca !important;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.performance-error strong {
+    font-weight: 600;
+}
+
+.visualization-section h3 {
+    margin-bottom: 1.5rem;
+    color: #1a202c;
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-wrapper {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.chart-wrapper:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.chart-wrapper h4 {
+    margin: 0 0 1.5rem 0;
+    color: #1a202c;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.chart-wrapper canvas {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    background: #fafbfc;
+    border: 1px solid #f1f5f9;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Performance Section Styles */
+.performance-section {
+    margin-bottom: 2rem;
+}
+
+.performance-section h3 {
+    margin-bottom: 1.5rem;
+    color: #1a202c;
+}
+
+.performance-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.metric-info {
+    flex: 1;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a202c;
+    line-height: 1;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: #4a5568;
+    margin-top: 0.25rem;
+}
+
+.performance-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.chart-container h4 {
+    margin: 0 0 1.5rem 0;
+    color: #1a202c;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.chart-container canvas {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    background: #fafbfc;
+    border: 1px solid #f1f5f9;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Button loading state */
+.btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    margin-left: -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Code Golf Visualizer button overrides - following base styles */
+.golf-challenge .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.golf-challenge .btn-secondary {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.golf-challenge .btn-outline {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+/* Test Badge Styles */
+.test-badges {
+    margin: 1rem 0;
+}
+
+.test-badges h4 {
+    margin-bottom: 1rem;
+    color: #374151;
+    font-weight: 600;
+}
+
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.test-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 2px solid;
+    background: #ffffff;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.test-badge.test-pending {
+    border-color: #6b7280;
+    color: #6b7280;
+    background: #f9fafb;
+}
+
+.test-badge.test-running {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background: #fffbeb;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.test-badge.test-passed {
+    border-color: #10b981;
+    color: #10b981;
+    background: #f0fdf4;
+}
+
+.test-badge.test-failed {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.badge-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.badge-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Example Test Cases Styling */
+.example-test-cases {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.example-test-cases h4 {
+    color: #1a202c;
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.test-case {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.test-case:last-child {
+    margin-bottom: 0;
+}
+
+.test-case-header {
+    color: #2d3748;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.test-case-input {
+    color: #4a5568;
+    font-size: 12px;
+    margin-bottom: 4px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.test-case-expected {
+    color: #2d3748;
+    font-size: 12px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* Hide performance test info from user */
+.performance-test-info {
+    display: none;
+}
+
+/* Custom scrollbar for example test cases */
+.example-test-cases::-webkit-scrollbar {
+    width: 6px;
+}
+
+.example-test-cases::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.example-test-cases::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.example-test-cases::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Mobile responsiveness for test badges */
+@media (max-width: 640px) {
+    .badge-container {
+        gap: 0.5rem;
+    }
+    
+    .test-badge {
+        min-width: 100px;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .badge-label {
+        font-size: 0.8rem;
+    }
+
+    .example-test-cases {
+        max-height: 150px;
+        padding: 12px;
+    }
+    
+    .test-case {
+        padding: 8px;
+    }
+    
+    .test-case-header {
+        font-size: 12px;
+    }
+}

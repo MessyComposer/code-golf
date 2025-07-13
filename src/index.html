@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Golf Visualizer - Roni Rantaeskola</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Monaco Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+    <!-- Demo Section (Placeholder) -->
+    <section class="demo-section">
+        <div class="container">
+            <h2>Live Code Golf Challenge</h2>
+            <div class="golf-challenge">
+                <div class="challenge-header">
+                    <div class="challenge-title-section">
+                        <h3 id="challenge-title">Challenge: FizzBuzz</h3>
+                        <div class="challenge-selector">
+                            <select id="problem-select">
+                                <option value="fizzbuzz">FizzBuzz</option>
+                                <option value="fibonacci">Fibonacci Sequence</option>
+                                <option value="prime">Prime Numbers</option>
+                                <option value="palindrome">Palindrome Check</option>
+                                <option value="factorial">Factorial</option>
+                                <option value="countVowels">Count Vowels</option>
+                                <option value="reverseString">Reverse String</option>
+                                <option value="sumArray">Sum Array</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="challenge-info">
+                        <span class="difficulty">Difficulty: <span class="difficulty-badge easy">Easy</span></span>
+                        <span class="submissions">Submissions: <span id="submission-count">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="challenge-description">
+                    <p id="challenge-desc"></p>
+                    <div class="expected-output">
+                        <h4>Examples:</h4>
+                        <div id="expected-output"></div>
+                    </div>
+                </div>
+
+                <div class="code-editor-section">
+                    <div class="editor-controls">
+                        <div class="editor-controls-left">
+                            <select id="language-select">
+                                <option value="javascript">JavaScript</option>
+                                <option value="python" disabled title="Coming Soon">Python (Coming soon)</option>
+                                <option value="java" disabled title="Coming Soon">Java (Coming soon)</option>
+                                <option value="cpp" disabled title="Coming Soon">C++ (Coming soon)</option>
+                            </select>
+                            <button id="run-code" class="btn btn-primary">
+                                <i class="fas fa-play"></i> Run Code
+                            </button>
+                            <button id="submit-code" class="btn btn-secondary">
+                                <i class="fas fa-upload"></i> Submit
+                            </button>
+                        </div>
+                        <div class="editor-controls-right">
+                            <button id="clear-storage" class="btn btn-outline btn-small">
+                                <i class="fas fa-trash"></i> Clear Data
+                            </button>
+                            <button id="add-sample-data" class="btn btn-outline btn-small">
+                                <i class="fas fa-plus"></i> Sample Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="editor-container">
+                        <div id="monaco-editor"></div>
+                    </div>
+                    
+                    <div class="output-section">
+                        <div class="output-header">
+                            <h4>Output</h4>
+                            <div class="metrics">
+                                <span class="metric">
+                                    <i class="fas fa-code"></i>
+                                    <span id="char-count">0</span> chars
+                                </span>
+                                <span class="metric">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="exec-time">-</span>
+                                </span>
+                            </div>
+                        </div>
+                        <pre id="code-output"></pre>
+                    </div>
+                </div>
+
+                <div class="performance-section">
+                    <h3>Code Performance Analysis</h3>
+                    <div class="performance-metrics">
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-value" id="current-chars">0</div>
+                                <div class="metric-label">Characters</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-value" id="current-time">-</div>
+                                <div class="metric-label">Execution Time</div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-value" id="efficiency-score">-</div>
+                                <div class="metric-label">Efficiency Score</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-charts">
+                        <div class="chart-container">
+                            <h4>Character Count Over Time</h4>
+                            <canvas id="chars-timeline" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h4>Execution Time History</h4>
+                            <canvas id="time-timeline" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualization-section">
+                    <h3>Code Analysis Insights</h3>
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <canvas id="complexity-chart" width="400" height="200"></canvas>
+                            <h4>Code Complexity Analysis</h4>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="optimization-chart" width="400" height="200"></canvas>
+                            <h4>Optimization Opportunities</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Footer -->
+        <!-- Footer -->
+    <footer style="background: #f8f9fa; padding: 2rem 0; margin-top: 3rem; text-align: center; color: #6c757d;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <p>&copy; 2025 Roni Rantaeskola. Code Golf Visualizer.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

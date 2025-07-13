@@ -1,0 +1,62 @@
+# Cloudflare Pages configuration
+# This file configures build settings and deployment options
+
+[build]
+  # Build command that GitLab CI will run
+  command = "npm run build:deploy"
+  
+  # Output directory containing the built static files
+  publish = "dist"
+
+[build.environment]
+  # Node.js version to use for builds
+  NODE_VERSION = "18"
+  
+  # Enable faster npm installs
+  NPM_FLAGS = "--prefer-offline --no-audit --progress=false"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Performance headers
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Specific caching for HTML files
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Long-term caching for assets with hashes in filename
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects (if needed)
+# [[redirects]]
+#   from = "/old-path/*"
+#   to = "/new-path/:splat"
+#   status = 301
+
+# SPA fallback - uncomment if you add client-side routing later
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
+
+# Custom error pages (optional)
+# [functions]
+# directory = "functions"
