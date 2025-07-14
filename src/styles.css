@@ -722,4 +722,153 @@ p {
     .test-case-header {
         font-size: 12px;
     }
+
+    /* Mobile responsiveness for editor controls */
+    .editor-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .editor-controls-left {
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    
+    .editor-controls-left .btn,
+    #language-select {
+        width: 100%;
+        min-height: 48px; /* Larger touch targets on mobile */
+    }
+    
+    .editor-controls-right {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .editor-controls-right .btn {
+        width: 100%;
+        margin: 0;
+        min-height: 44px;
+    }
+
+    /* Mobile responsiveness for charts */
+    .charts-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .chart-wrapper {
+        padding: 0.75rem;
+        margin: 0 -0.5rem;
+    }
+    
+    .chart-wrapper h4 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .chart-wrapper canvas {
+        height: 180px !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    .performance-charts {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .chart-container {
+        padding: 0.75rem;
+        margin: 0 -0.5rem;
+    }
+    
+    .chart-container h4 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .chart-container canvas {
+        height: 180px !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    /* Mobile responsiveness for performance metrics */
+    .performance-metrics {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .metric-card {
+        padding: 1rem;
+    }
+    
+    .metric-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Mobile responsiveness for challenge header */
+    .challenge-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .challenge-title-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .challenge-info {
+        justify-content: space-between;
+    }
+    
+    /* Mobile responsiveness for container and golf challenge */
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .golf-challenge {
+        padding: 1rem;
+        margin: 0 -0.5rem 1rem -0.5rem;
+    }
+    
+    /* Force chart responsiveness */
+    .chart-wrapper,
+    .chart-container {
+        overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Ensure monaco editor is responsive */
+    #monaco-editor {
+        height: 250px;
+    }
+    
+    /* Make output section more compact on mobile */
+    .output-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+    
+    .metrics {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
 }
