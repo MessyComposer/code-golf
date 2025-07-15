@@ -10,10 +10,17 @@
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Preload critical Inter font weights -->
+    
+    <!-- Load Google Fonts asynchronously to prevent render blocking -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+    
+    <!-- Preload the most critical Inter font weights directly -->
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa2JL7.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Preload additional weights for better performance -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa25L7.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa0ZL7.woff2" as="font" type="font/woff2" crossorigin>
     <!-- Font Awesome - Load asynchronously to prevent render blocking -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
@@ -28,11 +35,21 @@
         }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: #1a1a1a;
             background-color: #ffffff;
             overflow-x: hidden;
+            font-display: swap; /* Ensure text is visible during font load */
+        }
+        
+        /* Font loading optimization */
+        .font-loading body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .font-loaded body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         .container {
@@ -124,6 +141,39 @@
             min-height: 300px; /* Reserve space to prevent CLS */
         }
     </style>
+    
+    <!-- Font loading optimization script -->
+    <script>
+        // Font loading optimization - prevent FOIT (Flash of Invisible Text)
+        (function() {
+            // Add font-loading class initially
+            document.documentElement.className += ' font-loading';
+            
+            // Use Font Loading API if available
+            if ('fonts' in document) {
+                Promise.all([
+                    document.fonts.load('400 1em Inter'),
+                    document.fonts.load('500 1em Inter'),
+                    document.fonts.load('600 1em Inter')
+                ]).then(function() {
+                    document.documentElement.className = 
+                        document.documentElement.className.replace('font-loading', 'font-loaded');
+                }).catch(function() {
+                    // Fallback: assume fonts loaded after 3 seconds
+                    setTimeout(function() {
+                        document.documentElement.className = 
+                            document.documentElement.className.replace('font-loading', 'font-loaded');
+                    }, 3000);
+                });
+            } else {
+                // Fallback for browsers without Font Loading API
+                setTimeout(function() {
+                    document.documentElement.className = 
+                        document.documentElement.className.replace('font-loading', 'font-loaded');
+                }, 3000);
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Demo Section (Placeholder) -->

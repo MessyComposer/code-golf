@@ -75,7 +75,6 @@ module.exports = (env, argv) => {
             compress: {
               drop_console: true,
               drop_debugger: true,
-              pure_functions: ['console.log'],
               passes: 2,
             },
             mangle: {
