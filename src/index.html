@@ -21,9 +21,72 @@
     <!-- Preload additional weights for better performance -->
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa25L7.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v19/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa0ZL7.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- Font Awesome - Load asynchronously to prevent render blocking -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
+    <!-- Replace Font Awesome with inline SVG icons for better performance -->
+    <style>
+        /* SVG icon styles */
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            fill: currentColor;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+        
+        .icon-play { width: 0.875em; }
+        .icon-upload { width: 0.875em; }
+        .icon-trash { width: 0.875em; }
+        .icon-plus { width: 0.875em; }
+        .icon-code { width: 1em; margin-right: 0.25rem; }
+        .icon-clock { width: 1em; margin-right: 0.25rem; }
+        .icon-tachometer { width: 1em; }
+        
+        /* Metric icon specific styling */
+        .metric-icon .icon {
+            width: 1.5em;
+            height: 1.5em;
+            margin-right: 0;
+        }
+        
+        /* Button icon spacing */
+        .btn .icon {
+            margin-right: 0.5rem;
+        }
+        
+        /* Metric inline icon spacing */
+        .metric .icon {
+            margin-right: 0.25rem;
+        }
+    </style>
+    
+    <!-- SVG sprite for icons -->
+    <svg style="display: none;">
+        <defs>
+            <symbol id="icon-play" viewBox="0 0 24 24">
+                <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+            </symbol>
+            <symbol id="icon-upload" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+            </symbol>
+            <symbol id="icon-trash" viewBox="0 0 24 24">
+                <path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z"/>
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+            </symbol>
+            <symbol id="icon-code" viewBox="0 0 24 24">
+                <path d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L8,18L2,12L8,6L9.4,7.4L4.8,12L9.4,16.6Z"/>
+            </symbol>
+            <symbol id="icon-clock" viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z"/>
+            </symbol>
+            <symbol id="icon-tachometer" viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12H16A4,4 0 0,0 12,8V6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z"/>
+            </symbol>
+        </defs>
+    </svg>
     <!-- Monaco Editor will be loaded lazily when needed -->
     <!-- Critical CSS - Inline for immediate rendering -->
     <style>
@@ -121,11 +184,52 @@
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
+            border-radius: 4px;
         }
         
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
+        }
+        
+        /* Skeleton placeholders for different components */
+        .skeleton-chart {
+            height: 250px;
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skeleton-chart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .skeleton-metrics {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .skeleton-metric {
+            flex: 1;
+            height: 80px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
         }
         
         /* Performance optimizations */
@@ -139,6 +243,37 @@
         
         .performance-charts {
             min-height: 300px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Fix CLS for code-editor-section */
+        .code-editor-section {
+            min-height: 400px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Fix CLS for h2 elements */
+        h2 {
+            min-height: 2.5rem; /* Reserve space to prevent CLS */
+            margin-bottom: 3rem;
+        }
+        
+        /* Challenge header optimization */
+        .challenge-header {
+            min-height: 60px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Chart containers - reserve space before charts load */
+        .chart-container, .chart-wrapper {
+            min-height: 250px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Metric cards - stable layout */
+        .metric-card {
+            min-height: 80px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Output section - stable height */
+        .output-section {
+            min-height: 100px; /* Reserve space to prevent CLS */
         }
     </style>
     
@@ -221,18 +356,18 @@
                                 <option value="cpp" disabled title="Coming Soon">C++ (Coming soon)</option>
                             </select>
                             <button id="run-code" class="btn btn-primary">
-                                <i class="fas fa-play"></i> Run Code
+                                <svg class="icon icon-play"><use href="#icon-play"></use></svg> Run Code
                             </button>
                             <button id="submit-code" class="btn btn-secondary">
-                                <i class="fas fa-upload"></i> Submit
+                                <svg class="icon icon-upload"><use href="#icon-upload"></use></svg> Submit
                             </button>
                         </div>
                         <div class="editor-controls-right">
                             <button id="clear-storage" class="btn btn-outline btn-small">
-                                <i class="fas fa-trash"></i> Clear Data
+                                <svg class="icon icon-trash"><use href="#icon-trash"></use></svg> Clear Data
                             </button>
                             <button id="add-sample-data" class="btn btn-outline btn-small">
-                                <i class="fas fa-plus"></i> Sample Data
+                                <svg class="icon icon-plus"><use href="#icon-plus"></use></svg> Sample Data
                             </button>
                         </div>
                     </div>
@@ -246,11 +381,11 @@
                             <h4>Output</h4>
                             <div class="metrics">
                                 <span class="metric">
-                                    <i class="fas fa-code"></i>
+                                    <svg class="icon icon-code"><use href="#icon-code"></use></svg>
                                     <span id="char-count">0</span> chars
                                 </span>
                                 <span class="metric">
-                                    <i class="fas fa-clock"></i>
+                                    <svg class="icon icon-clock"><use href="#icon-clock"></use></svg>
                                     <span id="exec-time">-</span>
                                 </span>
                             </div>
@@ -264,7 +399,7 @@
                     <div class="performance-metrics">
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-code"></i>
+                                <svg class="icon icon-code"><use href="#icon-code"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="current-chars">0</div>
@@ -273,7 +408,7 @@
                         </div>
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-clock"></i>
+                                <svg class="icon icon-clock"><use href="#icon-clock"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="current-time">-</div>
@@ -282,7 +417,7 @@
                         </div>
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-tachometer-alt"></i>
+                                <svg class="icon icon-tachometer"><use href="#icon-tachometer"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="efficiency-score">-</div>
