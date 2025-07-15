@@ -316,7 +316,8 @@ p {
     min-height: 60px;
     border-radius: 0;
     border-left: 4px solid #e5e7eb;
-    transition: border-left-color 0.3s ease;
+    /* Remove transition to prevent non-composited animation */
+    will-change: auto;
 }
 
 /* Performance error message styling */
@@ -586,6 +587,7 @@ p {
     color: #f59e0b;
     background: #fffbeb;
     animation: pulse 1.5s ease-in-out infinite;
+    will-change: opacity;
 }
 
 .test-badge.test-passed {
@@ -613,9 +615,11 @@ p {
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
+        transform: translateZ(0); /* Hardware acceleration hint */
     }
     50% {
         opacity: 0.5;
+        transform: translateZ(0); /* Hardware acceleration hint */
     }
 }
 
