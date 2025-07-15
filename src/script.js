@@ -167,7 +167,7 @@ class CodeGolfVisualizer {
         // Start loading Monaco in the background after a short delay
         setTimeout(() => {
             this.initMonaco();
-        }, 100);
+        }, 300);
     }
     
     async initMonaco() {
@@ -239,9 +239,6 @@ class CodeGolfVisualizer {
         // Update current code
         this.currentCode = currentCode;
         this.updateCharacterCount();
-        
-        // Optional: Show a brief notification that Monaco is ready
-        console.log('Monaco Editor loaded and ready!');
         
         // Add a subtle visual indicator that Monaco is now active
         editorContainer.style.transition = 'border-color 0.3s ease';
@@ -677,7 +674,6 @@ function solve(arr) {
         const startTime = performance.now();
         try {
             const result = await this.executeCodeWithInput(this.currentCode, config.input);
-            console.log(result)
             const endTime = performance.now();
             const success = result === config.expectedOutput;
             const execTime = endTime - startTime;
