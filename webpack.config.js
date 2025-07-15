@@ -53,6 +53,13 @@ module.exports = (env, argv) => {
           minifyURLs: true,
         } : false
       }),
+      new CopyPlugin({
+        patterns: [
+          { from: 'src/robots.txt', to: 'robots.txt' },
+          { from: 'src/sitemap.xml', to: 'sitemap.xml' },
+          { from: '_headers', to: '' },
+        ],
+      }),
       ...(isProduction ? [
         new MiniCssExtractPlugin({
           filename: '[name].[contenthash].css',
