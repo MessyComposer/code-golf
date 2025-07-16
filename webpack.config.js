@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -13,7 +14,9 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
+      chunkFilename: isProduction ? '[name].[contenthash].chunk.js' : '[name].chunk.js',
       clean: true,
+      publicPath: '/',
     },
     module: {
       rules: [
@@ -50,10 +53,24 @@ module.exports = (env, argv) => {
           minifyURLs: true,
         } : false
       }),
+      new CopyPlugin({
+        patterns: [
+          { from: 'src/robots.txt', to: 'robots.txt' },
+          { from: 'src/sitemap.xml', to: 'sitemap.xml' },
+          { from: '_headers', to: '' },
+        ],
+      }),
       ...(isProduction ? [
         new MiniCssExtractPlugin({
           filename: '[name].[contenthash].css',
           chunkFilename: '[id].[contenthash].css',
+        }),
+        new CompressionPlugin({
+          filename: '[path][base].gz',
+          algorithm: 'gzip',
+          test: /\.(js|css|html|svg)$/,
+          threshold: 8192,
+          minRatio: 0.8,
         })
       ] : [])
     ],
@@ -64,8 +81,14 @@ module.exports = (env, argv) => {
           terserOptions: {
             compress: {
               drop_console: true,
+              drop_debugger: true,
+              passes: 2,
+            },
+            mangle: {
+              safari10: true,
             },
           },
+          extractComments: false,
         }),
         new CssMinimizerPlugin({
           minimizerOptions: {
@@ -92,12 +115,20 @@ module.exports = (env, argv) => {
       ],
       splitChunks: {
         chunks: 'all',
+        maxInitialRequests: 3,
+        maxAsyncRequests: 5,
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
+            priority: 10
           },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true
+          }
         },
       },
     },

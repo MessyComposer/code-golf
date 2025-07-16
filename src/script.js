@@ -159,28 +159,63 @@ class CodeGolfVisualizer {
             efficiency: 0
         };
         this.hasRunCode = false; // Track if code has been executed
+        this.monacoLoaded = false; // Track if Monaco Editor is loaded
+        this.monacoLoadPromise = null; // Track loading promise
         
-        this.initMonaco();
+        this.setupFallbackEditor(); // Start with fallback editor
+        
+        // Start loading Monaco in the background after a short delay
+        setTimeout(() => {
+            this.initMonaco();
+        }, 300);
     }
     
     async initMonaco() {
-        // Configure Monaco Editor - using global require.config since Monaco is loaded via CDN
-        if (typeof window !== 'undefined' && window.require && window.require.config) {
-            window.require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
-            
-            window.require(['vs/editor/editor.main'], () => {
-                this.setupMonacoEditor();
-            });
-        } else {
-            // Fallback if require is not available
-            console.warn('Monaco Editor require.js not available, falling back to textarea');
-            this.setupFallbackEditor();
-               }
+        if (this.monacoLoaded || this.monacoLoadPromise) {
+            return this.monacoLoadPromise;
+        }
+
+        this.monacoLoadPromise = new Promise((resolve, reject) => {
+            // Load Monaco Editor script dynamically
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js';
+            script.onload = () => {
+                // Configure Monaco Editor
+                window.require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
+                
+                window.require(['vs/editor/editor.main'], () => {
+                    this.monacoLoaded = true;
+                    this.setupMonacoEditor();
+                    resolve();
+                });
+            };
+            script.onerror = (error) => {
+                console.warn('Monaco Editor failed to load, will continue with fallback:', error);
+                reject(error);
+            };
+            document.head.appendChild(script);
+        });
+
+        return this.monacoLoadPromise;
     }
     
     setupMonacoEditor() {
-        this.monacoEditor = monaco.editor.create(document.getElementById('monaco-editor'), {
-            value: this.getSampleCode('javascript'),
+        // Get current code from fallback editor if it exists
+        const fallbackEditor = document.getElementById('fallback-editor');
+        const currentCode = fallbackEditor ? fallbackEditor.value : this.getSampleCode('javascript');
+        
+        // Remove loading indicator
+        const loadingIndicator = document.getElementById('monaco-loading');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+        
+        // Clear the container and setup Monaco
+        const editorContainer = document.getElementById('monaco-editor');
+        editorContainer.innerHTML = '';
+        
+        this.monacoEditor = monaco.editor.create(editorContainer, {
+            value: currentCode,
             language: 'javascript',
             theme: 'vs-dark',
             minimap: { enabled: false },
@@ -201,14 +236,28 @@ class CodeGolfVisualizer {
             this.updateCharacterCount();
         });
         
-        // Initialize after Monaco is ready
-        this.init();
+        // Update current code
+        this.currentCode = currentCode;
+        this.updateCharacterCount();
+        
+        // Add a subtle visual indicator that Monaco is now active
+        editorContainer.style.transition = 'border-color 0.3s ease';
+        editorContainer.style.borderColor = '#667eea';
+        setTimeout(() => {
+            editorContainer.style.borderColor = '#e2e8f0';
+        }, 1000);
     }
     
     setupFallbackEditor() {
         // Create a textarea fallback if Monaco Editor fails to load
         const editorContainer = document.getElementById('monaco-editor');
-        editorContainer.innerHTML = '<textarea id="fallback-editor" style="width: 100%; height: 300px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; border: none; padding: 10px;"></textarea>';
+        editorContainer.innerHTML = `
+            <textarea id="fallback-editor" style="width: 100%; height: 300px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; border: none; padding: 10px;"></textarea>
+            <div id="monaco-loading" style="position: absolute; top: 10px; right: 10px; font-size: 0.8em; color: #888; opacity: 0.7;">
+                Loading enhanced editor...
+            </div>
+        `;
+        
         const textarea = document.getElementById('fallback-editor');
         textarea.value = this.getSampleCode('javascript');
         
@@ -228,7 +277,16 @@ class CodeGolfVisualizer {
         this.updateSubmissionCount();
         this.updatePerformanceMetrics();
         this.renderPerformanceCharts();
-        this.currentCode = this.monacoEditor.getValue();
+        
+        // Get current code from appropriate editor
+        if (this.monacoEditor) {
+            this.currentCode = this.monacoEditor.getValue();
+        } else {
+            const textarea = document.getElementById('fallback-editor');
+            if (textarea) {
+                this.currentCode = textarea.value;
+            }
+        }
     }
     
     setupEventListeners() {
@@ -405,17 +463,24 @@ function solve(arr) {
     }
 
     loadSampleCode() {
+        const code = this.getSampleCode(this.currentLanguage);
+        
         if (this.monacoEditor) {
-            const code = this.getSampleCode(this.currentLanguage);
             this.monacoEditor.setValue(code);
             
             // Update Monaco Editor language
             const model = this.monacoEditor.getModel();
             monaco.editor.setModelLanguage(model, this.currentLanguage);
-            
-            this.currentCode = code;
-            this.updateCharacterCount();
+        } else {
+            // Update fallback editor
+            const fallbackEditor = document.getElementById('fallback-editor');
+            if (fallbackEditor) {
+                fallbackEditor.value = code;
+            }
         }
+        
+        this.currentCode = code;
+        this.updateCharacterCount();
     }
     
     updateCharacterCount() {
@@ -438,8 +503,15 @@ function solve(arr) {
         const output = document.getElementById('code-output');
         const execTimeElement = document.getElementById('exec-time');
         
-        // Get current code from Monaco Editor
-        this.currentCode = this.monacoEditor.getValue();
+        // Get current code from appropriate editor
+        if (this.monacoEditor) {
+            this.currentCode = this.monacoEditor.getValue();
+        } else {
+            const fallbackEditor = document.getElementById('fallback-editor');
+            if (fallbackEditor) {
+                this.currentCode = fallbackEditor.value;
+            }
+        }
         
         try {
             // Reset test badges to pending state
@@ -602,7 +674,6 @@ function solve(arr) {
         const startTime = performance.now();
         try {
             const result = await this.executeCodeWithInput(this.currentCode, config.input);
-            console.log(result)
             const endTime = performance.now();
             const success = result === config.expectedOutput;
             const execTime = endTime - startTime;
@@ -652,8 +723,15 @@ function solve(arr) {
                 }
     async submitCode() {
         try {
-            // Get current code from Monaco Editor
-            this.currentCode = this.monacoEditor.getValue();
+            // Get current code from appropriate editor
+            if (this.monacoEditor) {
+                this.currentCode = this.monacoEditor.getValue();
+            } else {
+                const fallbackEditor = document.getElementById('fallback-editor');
+                if (fallbackEditor) {
+                    this.currentCode = fallbackEditor.value;
+                }
+            }
             
             // Run all example tests to validate correctness
             const testResults = await this.runExampleTests();

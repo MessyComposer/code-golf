@@ -4,18 +4,418 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Golf Visualizer - Roni Rantaeskola</title>
+    <meta name="description" content="Interactive code golf visualization tool by Roni Rantaeskola. Analyze algorithm efficiency, compare solutions, and visualize execution performance with real-time metrics and charts.">
+    <meta name="keywords" content="code golf, algorithm visualization, performance analysis, programming challenges, code optimization, execution metrics">
+    <meta name="author" content="Roni Rantaeskola">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Code Golf Visualizer - Interactive Algorithm Performance Tool">
+    <meta property="og:description" content="Interactive code golf visualization tool. Analyze algorithm efficiency, compare solutions, and visualize execution performance with real-time metrics.">
+    <meta property="og:url" content="https://code-golf.pages.dev/">
+    <meta property="og:site_name" content="Code Golf Visualizer">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Code Golf Visualizer - Interactive Algorithm Performance Tool">
+    <meta property="twitter:description" content="Interactive code golf visualization tool. Analyze algorithm efficiency, compare solutions, and visualize execution performance.">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Code Golf Visualizer",
+        "description": "Interactive code golf visualization tool for analyzing algorithm efficiency and performance metrics",
+        "url": "https://code-golf.pages.dev/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "author": {
+            "@type": "Person",
+            "name": "Roni Rantaeskola",
+            "url": "https://github.com/MessyComposer"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Roni Rantaeskola"
+        },
+        "keywords": ["code golf", "algorithm visualization", "performance analysis", "programming challenges", "code optimization"],
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "softwareVersion": "1.0",
+        "datePublished": "2025-01-01",
+        "dateModified": "2025-07-15"
+    }
+    </script>
+    
+    <!-- Security Headers (CSP only - other headers via _headers file) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://fonts.googleapis.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self'; form-action 'self';">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://code-golf.pages.dev/">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Monaco Editor -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    
+    <!-- Load Google Fonts optimized for performance -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"></noscript>
+    
+    <!-- Replace Font Awesome with inline SVG icons for better performance -->
+    <style>
+        /* SVG icon styles */
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            fill: currentColor;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+        
+        .icon-play { width: 0.875em; }
+        .icon-upload { width: 0.875em; }
+        .icon-trash { width: 0.875em; }
+        .icon-plus { width: 0.875em; }
+        .icon-code { width: 1em; margin-right: 0.25rem; }
+        .icon-clock { width: 1em; margin-right: 0.25rem; }
+        .icon-tachometer { width: 1em; }
+        
+        /* Metric icon specific styling */
+        .metric-icon .icon {
+            width: 1.5em;
+            height: 1.5em;
+            margin-right: 0;
+        }
+        
+        /* Button icon spacing */
+        .btn .icon {
+            margin-right: 0.5rem;
+        }
+        
+        /* Metric inline icon spacing */
+        .metric .icon {
+            margin-right: 0.25rem;
+        }
+        
+        /* Accessibility improvements */
+        .skip-link {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        
+        .skip-link:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            padding: 0.5rem 1rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            z-index: 1000;
+        }
+        
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+        
+        /* Focus indicators */
+        button:focus,
+        select:focus,
+        a:focus {
+            outline: 2px solid #007acc;
+            outline-offset: 2px;
+        }
+    </style>
+    
+    <!-- SVG sprite for icons -->
+    <svg style="display: none;">
+        <defs>
+            <symbol id="icon-play" viewBox="0 0 24 24">
+                <path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/>
+            </symbol>
+            <symbol id="icon-upload" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                <path d="M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+            </symbol>
+            <symbol id="icon-trash" viewBox="0 0 24 24">
+                <path d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z"/>
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+            </symbol>
+            <symbol id="icon-code" viewBox="0 0 24 24">
+                <path d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L8,18L2,12L8,6L9.4,7.4L4.8,12L9.4,16.6Z"/>
+            </symbol>
+            <symbol id="icon-clock" viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z"/>
+            </symbol>
+            <symbol id="icon-tachometer" viewBox="0 0 24 24">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12H16A4,4 0 0,0 12,8V6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z"/>
+            </symbol>
+        </defs>
+    </svg>
+    <!-- Monaco Editor will be loaded lazily when needed -->
+    <!-- Critical CSS - Inline for immediate rendering -->
+    <style>
+        /* Critical above-the-fold styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            font-display: swap; /* Ensure text is visible during font load */
+        }
+        
+        /* Font loading optimization */
+        .font-loading body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .font-loaded body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .demo-section {
+            background: #f7fafc;
+            padding: 80px 0;
+        }
+        
+        .demo-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #1a202c;
+            font-weight: 600;
+        }
+        
+        .golf-challenge {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        /* Reserve space for editor to prevent layout shift */
+        .editor-container {
+            margin-bottom: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: visible;
+            transition: border-color 0.3s ease;
+            min-height: 300px; /* Reserve space to prevent CLS */
+        }
+        
+        #monaco-editor {
+            height: 300px;
+            width: 100%;
+        }
+        
+        .editor-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 0.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 60px; /* Reserve space to prevent CLS */
+        }
+        
+        .editor-controls-right {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+            min-height: 44px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Add loading skeleton styles */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Skeleton placeholders for different components */
+        .skeleton-chart {
+            height: 250px;
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skeleton-chart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .skeleton-metrics {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .skeleton-metric {
+            flex: 1;
+            height: 80px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        /* Performance optimizations */
+        .performance-section, .visualization-section {
+            min-height: 400px; /* Reserve space to prevent CLS */
+        }
+        
+        .performance-metrics {
+            min-height: 120px; /* Reserve space to prevent CLS */
+        }
+        
+        .performance-charts {
+            min-height: 300px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Fix CLS for code-editor-section */
+        .code-editor-section {
+            min-height: 400px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Fix CLS for h2 elements */
+        h2 {
+            min-height: 2.5rem; /* Reserve space to prevent CLS */
+            margin-bottom: 3rem;
+        }
+        
+        /* Challenge header optimization */
+        .challenge-header {
+            min-height: 60px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Chart containers - reserve space before charts load */
+        .chart-container, .chart-wrapper {
+            min-height: 250px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Metric cards - stable layout */
+        .metric-card {
+            min-height: 80px; /* Reserve space to prevent CLS */
+        }
+        
+        /* Output section - stable height */
+        .output-section {
+            min-height: 100px; /* Reserve space to prevent CLS */
+        }
+    </style>
+    
+    <!-- Font loading optimization script -->
+    <script>
+        // Font loading optimization - prevent FOIT (Flash of Invisible Text)
+        (function() {
+            // Add font-loading class initially
+            document.documentElement.className += ' font-loading';
+            
+            // Use Font Loading API if available
+            if ('fonts' in document) {
+                Promise.all([
+                    document.fonts.load('400 1em Inter'),
+                    document.fonts.load('500 1em Inter'),
+                    document.fonts.load('600 1em Inter')
+                ]).then(function() {
+                    document.documentElement.className = 
+                        document.documentElement.className.replace('font-loading', 'font-loaded');
+                }).catch(function() {
+                    // Fallback: assume fonts loaded after 3 seconds
+                    setTimeout(function() {
+                        document.documentElement.className = 
+                            document.documentElement.className.replace('font-loading', 'font-loaded');
+                    }, 3000);
+                });
+            } else {
+                // Fallback for browsers without Font Loading API
+                setTimeout(function() {
+                    document.documentElement.className = 
+                        document.documentElement.className.replace('font-loading', 'font-loaded');
+                }, 3000);
+            }
+        })();
+    </script>
 </head>
 <body>
-    <!-- Demo Section (Placeholder) -->
-    <section class="demo-section">
-        <div class="container">
-            <h2>Live Code Golf Challenge</h2>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Main header -->
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <h1 class="visually-hidden">Code Golf Visualizer</h1>
+        </nav>
+    </header>
+    
+    <!-- Main content -->
+    <main id="main-content" role="main">
+        <!-- Demo Section -->
+        <section class="demo-section" aria-labelledby="demo-heading">
+            <div class="container">
+                <h2 id="demo-heading">Live Code Golf Challenge</h2>
             <div class="golf-challenge">
                 <div class="challenge-header">
                     <div class="challenge-title-section">
@@ -57,18 +457,18 @@
                                 <option value="cpp" disabled title="Coming Soon">C++ (Coming soon)</option>
                             </select>
                             <button id="run-code" class="btn btn-primary">
-                                <i class="fas fa-play"></i> Run Code
+                                <svg class="icon icon-play"><use href="#icon-play"></use></svg> Run Code
                             </button>
                             <button id="submit-code" class="btn btn-secondary">
-                                <i class="fas fa-upload"></i> Submit
+                                <svg class="icon icon-upload"><use href="#icon-upload"></use></svg> Submit
                             </button>
                         </div>
                         <div class="editor-controls-right">
                             <button id="clear-storage" class="btn btn-outline btn-small">
-                                <i class="fas fa-trash"></i> Clear Data
+                                <svg class="icon icon-trash"><use href="#icon-trash"></use></svg> Clear Data
                             </button>
                             <button id="add-sample-data" class="btn btn-outline btn-small">
-                                <i class="fas fa-plus"></i> Sample Data
+                                <svg class="icon icon-plus"><use href="#icon-plus"></use></svg> Sample Data
                             </button>
                         </div>
                     </div>
@@ -82,11 +482,11 @@
                             <h4>Output</h4>
                             <div class="metrics">
                                 <span class="metric">
-                                    <i class="fas fa-code"></i>
+                                    <svg class="icon icon-code"><use href="#icon-code"></use></svg>
                                     <span id="char-count">0</span> chars
                                 </span>
                                 <span class="metric">
-                                    <i class="fas fa-clock"></i>
+                                    <svg class="icon icon-clock"><use href="#icon-clock"></use></svg>
                                     <span id="exec-time">-</span>
                                 </span>
                             </div>
@@ -100,7 +500,7 @@
                     <div class="performance-metrics">
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-code"></i>
+                                <svg class="icon icon-code"><use href="#icon-code"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="current-chars">0</div>
@@ -109,7 +509,7 @@
                         </div>
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-clock"></i>
+                                <svg class="icon icon-clock"><use href="#icon-clock"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="current-time">-</div>
@@ -118,7 +518,7 @@
                         </div>
                         <div class="metric-card">
                             <div class="metric-icon">
-                                <i class="fas fa-tachometer-alt"></i>
+                                <svg class="icon icon-tachometer"><use href="#icon-tachometer"></use></svg>
                             </div>
                             <div class="metric-info">
                                 <div class="metric-value" id="efficiency-score">-</div>
@@ -162,8 +562,21 @@
     <footer style="background: #f8f9fa; padding: 2rem 0; margin-top: 3rem; text-align: center; color: #6c757d;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
             <p>&copy; 2025 Roni Rantaeskola. Code Golf Visualizer.</p>
-        </div>
-    </footer>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer role="contentinfo">
+            <div class="container">
+                <p>&copy; 2025 Code Golf Visualizer by <a href="https://github.com/MessyComposer" rel="noopener" target="_blank">Roni Rantaeskola</a></p>
+                <p>
+                    <a href="#privacy">Privacy Policy</a> | 
+                    <a href="#terms">Terms of Service</a> | 
+                </p>
+            </div>
+        </footer>
+    </div>
 
 </body>
 </html>

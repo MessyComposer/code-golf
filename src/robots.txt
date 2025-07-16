@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://code-golf.pages.dev/sitemap.xml
+
+# Crawl-delay (optional)
+Crawl-delay: 1
+
+# Allow search engines to index the main application
+Allow: /index.html
+Allow: /main.*.js
+Allow: /main.*.css
+
+# Disallow source maps (not useful for SEO)
+Disallow: /*.map
+
+# Disallow development files
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /webpack.config.js
+Disallow: /package.json
+Disallow: /package-lock.json
