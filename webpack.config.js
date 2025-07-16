@@ -5,6 +5,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -52,6 +53,35 @@ module.exports = (env, argv) => {
           minifyCSS: true,
           minifyURLs: true,
         } : false
+      }),
+      new MonacoWebpackPlugin({
+        languages: ['javascript'],  // , 'typescript', 'python', 'html', 'css'
+        features: [
+          'find',
+          'folding',
+          'bracketMatching',
+        //   'suggest',
+        //   'hover',
+        //   'parameterHints',
+          'wordHighlighter',
+          'clipboard',
+        //   'contextmenu',
+          'quickOutline',
+        //   'gotoLine',
+          'comment',
+        //   'codeAction',
+        //   'codelens',
+        //   'colorDetector',
+          'format',
+          'inPlaceReplace',
+        //   'links',
+          'multicursor',
+          'rename',
+          'smartSelect',
+        //   'toggleHighContrast',
+          'wordOperations',
+          'wordPartOperations'
+        ]
       }),
       new CopyPlugin({
         patterns: [
@@ -118,8 +148,15 @@ module.exports = (env, argv) => {
         maxInitialRequests: 3,
         maxAsyncRequests: 5,
         cacheGroups: {
+          monaco: {
+            test: /[\\/]node_modules[\\/]monaco-editor[\\/]/,
+            name: 'monaco-editor',
+            chunks: 'all',
+            priority: 20,
+            enforce: true
+          },
           vendor: {
-            test: /[\\/]node_modules[\\/]/,
+            test: /[\\/]node_modules[\\/](?!monaco-editor)/,
             name: 'vendors',
             chunks: 'all',
             priority: 10

@@ -1,4 +1,5 @@
 // Code Golf Visualizer JavaScript
+import { createEditor, setLanguage, defineCustomThemes, getAvailableLanguages } from './monaco-editor.js';
 
 class CodeGolfVisualizer {
     constructor() {
@@ -160,74 +161,45 @@ class CodeGolfVisualizer {
         };
         this.hasRunCode = false; // Track if code has been executed
         this.monacoLoaded = false; // Track if Monaco Editor is loaded
-        this.monacoLoadPromise = null; // Track loading promise
         
-        this.setupFallbackEditor(); // Start with fallback editor
-        
-        // Start loading Monaco in the background after a short delay
-        setTimeout(() => {
-            this.initMonaco();
-        }, 300);
+        this.init();
+    }
+    
+    async init() {
+        try {
+            // Define custom themes
+            defineCustomThemes();
+            
+            // Initialize Monaco Editor
+            await this.initMonaco();
+            
+            // Setup event listeners and UI
+            this.setupEventListeners();
+            this.updateChallengeDisplay();
+            this.updateCharacterCount();
+            this.updateSubmissionCount();
+            this.updatePerformanceMetrics();
+            this.renderPerformanceCharts();
+            
+            this.monacoLoaded = true;
+        } catch (error) {
+            console.error('Failed to initialize Monaco Editor:', error);
+            this.setupFallbackEditor();
+        }
     }
     
     async initMonaco() {
-        if (this.monacoLoaded || this.monacoLoadPromise) {
-            return this.monacoLoadPromise;
-        }
-
-        this.monacoLoadPromise = new Promise((resolve, reject) => {
-            // Load Monaco Editor script dynamically
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js';
-            script.onload = () => {
-                // Configure Monaco Editor
-                window.require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
-                
-                window.require(['vs/editor/editor.main'], () => {
-                    this.monacoLoaded = true;
-                    this.setupMonacoEditor();
-                    resolve();
-                });
-            };
-            script.onerror = (error) => {
-                console.warn('Monaco Editor failed to load, will continue with fallback:', error);
-                reject(error);
-            };
-            document.head.appendChild(script);
-        });
-
-        return this.monacoLoadPromise;
-    }
-    
-    setupMonacoEditor() {
-        // Get current code from fallback editor if it exists
-        const fallbackEditor = document.getElementById('fallback-editor');
-        const currentCode = fallbackEditor ? fallbackEditor.value : this.getSampleCode('javascript');
-        
-        // Remove loading indicator
-        const loadingIndicator = document.getElementById('monaco-loading');
-        if (loadingIndicator) {
-            loadingIndicator.remove();
-        }
-        
-        // Clear the container and setup Monaco
+        // Get the editor container
         const editorContainer = document.getElementById('monaco-editor');
+        
+        // Remove any existing content
         editorContainer.innerHTML = '';
         
-        this.monacoEditor = monaco.editor.create(editorContainer, {
-            value: currentCode,
-            language: 'javascript',
-            theme: 'vs-dark',
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            fontSize: 14,
-            lineNumbers: 'on',
-            roundedSelection: false,
-            autoIndent: 'full',
-            automaticLayout: true,
-            wordWrap: 'on',
-            tabSize: 2,
-            insertSpaces: true
+        // Create Monaco Editor instance
+        this.monacoEditor = createEditor(editorContainer, {
+            value: this.getSampleCode(this.currentLanguage),
+            language: this.currentLanguage,
+            theme: 'code-golf-dark'
         });
         
         // Listen for content changes
@@ -236,57 +208,37 @@ class CodeGolfVisualizer {
             this.updateCharacterCount();
         });
         
-        // Update current code
-        this.currentCode = currentCode;
-        this.updateCharacterCount();
-        
-        // Add a subtle visual indicator that Monaco is now active
-        editorContainer.style.transition = 'border-color 0.3s ease';
-        editorContainer.style.borderColor = '#667eea';
-        setTimeout(() => {
-            editorContainer.style.borderColor = '#e2e8f0';
-        }, 1000);
+        // Set initial code
+        this.currentCode = this.monacoEditor.getValue();
     }
     
     setupFallbackEditor() {
         // Create a textarea fallback if Monaco Editor fails to load
         const editorContainer = document.getElementById('monaco-editor');
         editorContainer.innerHTML = `
-            <textarea id="fallback-editor" style="width: 100%; height: 300px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; border: none; padding: 10px;"></textarea>
-            <div id="monaco-loading" style="position: absolute; top: 10px; right: 10px; font-size: 0.8em; color: #888; opacity: 0.7;">
-                Loading enhanced editor...
+            <textarea id="fallback-editor" style="width: 100%; height: 300px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; border: none; padding: 10px; resize: vertical;"></textarea>
+            <div style="position: absolute; top: 10px; right: 10px; font-size: 0.8em; color: #888; opacity: 0.7;">
+                Fallback editor (Monaco failed to load)
             </div>
         `;
         
         const textarea = document.getElementById('fallback-editor');
-        textarea.value = this.getSampleCode('javascript');
+        textarea.value = this.getSampleCode(this.currentLanguage);
         
         textarea.addEventListener('input', () => {
             this.currentCode = textarea.value;
             this.updateCharacterCount();
         });
         
-        // Initialize after fallback editor is ready
-        this.init();
-    }
-
-    init() {
+        this.currentCode = textarea.value;
+        
+        // Setup the rest of the UI
         this.setupEventListeners();
         this.updateChallengeDisplay();
         this.updateCharacterCount();
         this.updateSubmissionCount();
         this.updatePerformanceMetrics();
         this.renderPerformanceCharts();
-        
-        // Get current code from appropriate editor
-        if (this.monacoEditor) {
-            this.currentCode = this.monacoEditor.getValue();
-        } else {
-            const textarea = document.getElementById('fallback-editor');
-            if (textarea) {
-                this.currentCode = textarea.value;
-            }
-        }
     }
     
     setupEventListeners() {
@@ -468,9 +420,8 @@ function solve(arr) {
         if (this.monacoEditor) {
             this.monacoEditor.setValue(code);
             
-            // Update Monaco Editor language
-            const model = this.monacoEditor.getModel();
-            monaco.editor.setModelLanguage(model, this.currentLanguage);
+            // Update Monaco Editor language using the imported function
+            setLanguage(this.monacoEditor, this.currentLanguage);
         } else {
             // Update fallback editor
             const fallbackEditor = document.getElementById('fallback-editor');
@@ -1523,4 +1474,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 250);
     });
     
+});
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new CodeGolfVisualizer();
 });
